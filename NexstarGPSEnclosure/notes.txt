@@ -1,0 +1,18 @@
+Revision 1 notes
+
+Layer 0 (Screen)
+Screen pegs are not far enough apart (+2mm width or +1.25mm height - top of screen is the right height)
+The pegs themelves are a good size - little small
+Side ribs are 1.25mm to far apart
+
+All the holes are a bit tight for m2.5, but are tappable
+
+Clam shell right, revision 1.
+
+Screw fixing worked well.
+
+Front plate holding the screen unit it a bit weak.
+
+GPS holder is good size (can be less tall) but needs wire out. (These will class with clamshell screw fixing positions)
+
+Unit needs to be talled for the wires top and bottom, but can be shallower.
