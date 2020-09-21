@@ -8,3 +8,7 @@ Filement 2mm at corners
 6mm couterbore 3mm deep
 finger nail gap for removal
 m3 by 8 low cap headtype
+
+
+
+

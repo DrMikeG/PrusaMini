@@ -24,3 +24,20 @@ Shift pinda sensor upwards.
 
 Better live adjust patch:
 https://forum.prusaprinters.org/forum/original-prusa-i3-mk3s-mk3-assembly-and-first-prints-troubleshooting/life-adjust-z-my-way/
+
+
+Learning about nozzles, layer height and speed
+
+Layer height should not exceed 80 % of the nozzle diameter.
+If you are using the standard 0.4mm nozzle, the maximal layer height should be 0.32 mm.
+With a 0.6mm nozzle, it's possible to achieve up to a 0.48 mm layer height.
+
+Slicers tweaks:
+https://youtu.be/3kW9SnK4LKc what some of the setting mean.
+
+
+Avoid printing support material: https://youtu.be/RPijCjz9G1w
+Sacrificial briding.
+Print 1 layer in mid air (no holes)
+
+0.5mm vertical to turn C in O
