@@ -1,0 +1,1 @@
+Clamp It Square - Non-Embossing (Mini, Midi & Large sizes) by The_Redcoat on Thingiverse: https://www.thingiverse.com/thing:4584818
