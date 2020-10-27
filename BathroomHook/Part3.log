@@ -1,5 +1,5 @@
 Solid Edge Translation to STL
-Date: Friday,July 24,2020 04:52PM
+Date: Monday,October 19,2020 06:17PM
 Source File:C:\Users\gibbens\Documents\PrusaMini\BathroomHook\Part3.par
 Source System: SOLID EDGE
 
@@ -9,17 +9,17 @@ Operating System: Windows 10 Enterprise Edition
 Installed Memory: 31.8 GB
 
 Software Information:
-Parasolid Version: 33.0.128
+Parasolid Version: 33.0.171
 PSBodyshop Version: 33.0.86
-Solid Edge Version: 222.00.00.011 x64
+Solid Edge Version: 222.00.00.023 x64
 
 STL Export Options:
 Output File Format:BINARY
 Export Displayed Parts:On
 structureOption: Monolithic
 Export Units:Millimeter
-Export Tolerance Value:0.050000
-Export Tolerance Type:Custom
+Export Tolerance Value:0.001000
+Export Tolerance Type:Fine
 Export Surface Plane Angle Value:0.523599
 
 Translation progress:
