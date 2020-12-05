@@ -1,0 +1,25 @@
+STL translation to Solid Edge
+Date: Wednesday,November 18,2020 11:49AM
+Source File:C:\Users\gibbens\Documents\PrusaMini\Curioes\thing1147252\files\20160204_Toothpaste_Roller_print_Rev_C_fixed.stl
+Author: Unknown
+Organization: Unknown
+Source System: DEX
+
+Hardware:
+Processor: Intel(R) Core(TM) i7-8850H CPU @ 2.60GHz
+Operating System: Windows 10 Enterprise Edition
+Installed Memory: 31.8 GB
+
+Software Information:
+Parasolid Version: 33.0.171
+PSBodyshop Version: 33.0.86
+Solid Edge Version: 222.00.00.023 x64
+
+STL Import Options
+Heal Mesh Faults:Off
+Make Base Feature:On
+Enable Logging:On
+
+Translation progress:
+Translation process completed
+Time required to translate:00 : 00 : 04
