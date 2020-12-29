@@ -1,0 +1,930 @@
+var spinnerHandler = (function(){
+	var $loadingOverlay = $('<div class="loading-overlay">'), $spinner = $('<div class="spinner"><div class="circle1 child"></div><div class="circle2 child"></div><div class="circle3 child"></div><div class="circle4 child"></div><div class="circle5 child"></div><div class="circle6 child"></div><div class="circle7 child"></div><div class="circle8 child"></div><div class="circle9 child"></div><div class="circle10 child"></div><div class="circle11 child"></div><div class="circle12 child"></div></div>');
+	this.show = function () {
+		(!$(document.body).find($loadingOverlay).length&&!$(document.body).find($spinner).length)&&$(document.body).append($loadingOverlay).append($spinner);
+	};
+	this.hide = function() {
+		$(document.body).find($loadingOverlay).first().remove();
+		$(document.body).find($spinner).first().remove();
+	};
+	return this;
+})();
+	
+$(document).ready(function() {
+	var timeOutIdQuery = 0;
+	/*** Scroll personnalis� **/
+	$ = jQuery;
+	$('.content_panier_der').niceScroll();
+
+	/***********PAGE ART INTERNAUTE si VIde**********/
+	if($.trim($(".internaute_achat .conseil_content .pi-row").html())==""){
+		$(".internaute_achat").remove()
+	}
+
+	if($.trim($(".left_text .p_desc p").text())==""){
+		$(".p_desc").remove()
+	}
+    $('input,textarea').each(function(){
+        var placeholder=this.placeholder||'';
+        if($(this).attr('id') === "qm" || $(this).hasClass("input_client") ){}else{
+            $(this).on('keypress',function(e){if(e.keyCode===13)e.preventDefault();}).on('focus', function(){this.placeholder=''}).on('blur', function(){this.placeholder=placeholder})
+        }
+    });
+
+	movecdeaction();
+	/**BOUTON ACHETER**/
+	$(".toggle_menu").click(function(e){
+		$('.navigation').slideToggle();
+	});
+	/*********click descr complete*******/
+	$(".dc").click(function(e){
+		$('#fiche').removeClass('pi-active');
+		$('.ongle_caractr li:nth-child(2)').removeClass('pi-active');
+		$('#description').addClass('pi-active');
+		$('.ongle_caractr li:nth-child(1)').addClass('pi-active');
+	});
+	/*** Header sticky **/
+	/************Insit colonne****************/
+	if ($('.instit_content .institform').length==0){
+		  $('.instit_content .instit_center').addClass('no_form');
+
+	}
+	$('.ss_nav_cat').each(function() {
+		 $(this).click(function(e){
+			 $(this).parent('menu_commun_catalogue').addClass('active_open');
+		});
+    });
+
+	/*************couleur catalogue en cours******************/
+	var li_color= $('.menuNiv0_lib a').css('color');
+	var a_color= $('.ss_nav_cat a').css('color');
+	$('.menuNiv1_folderBitOpen a.ss_nav_lien').css('color', li_color);
+	$('.folderBitOpen').find('.ss_nav2_lien').css('color', li_color);
+	$('.file .folderBitOpen').find('.ss_nav3_lien').css('color', li_color);
+
+	$('.ss_nav_cat a').hover(function(){
+		$(this).css('color', li_color);
+		}, function(){
+		  $(this).css('color',a_color );
+		   $('.menuNiv1_folderBitOpen a.ss_nav_lien').css('color', li_color);
+		   $('.folderBitOpen').find('.ss_nav2_lien').css('color', li_color);
+		   $('.file .folderBitOpen').find('.ss_nav3_lien').css('color', li_color);
+	});
+
+	$(".bg_art_w")
+		.mouseenter(function(){
+			$(this).find(".articleBit_lienpanier").show();
+		})
+		.mouseleave(function(){
+			$(".articleBit_lienpanier").hide();
+		});
+
+	/* Home slider */
+    $('.carouHome').slick({
+		slidesToShow: 1,
+		slidesToScroll: 1,
+        swipeToSlide: true,
+        infinite: false,
+		dots: true,
+		arrows :false,
+		autoplay: true,
+		slide: 'div',
+		cssEase: 'linear',
+		adaptiveHeight: true,
+		fade: true
+	});
+
+
+	/* Deal slider */
+	$('.top_products').slick({
+		slidesToShow: 4,
+		slidesToScroll: 1,
+		dots: false,
+		draggable:false,
+		arrows :true,
+		autoplay: false,
+		infinite: false,
+		slide: 'div',
+		cssEase: 'linear',
+		adaptiveHeight: true,
+		responsive: [
+			{
+			  breakpoint: 1000,
+			  settings: {
+				slidesToShow: 3,
+				slidesToScroll: 3,
+				draggable:true
+			  }
+			},
+			{
+			  breakpoint: 768,
+			  settings: {
+				slidesToShow: 2,
+				slidesToScroll: 2,
+				draggable:true,
+				autoplay: true,
+				autoplaySpeed: 2000,
+				speed : 500
+			  }
+			}
+			]
+	});
+	$(".jQueryRotate").rotate({
+	   bind:
+		{
+		   mouseover : function() {
+			  $(this).find('img').rotate({animateTo:360});
+			  $(this).find('.rotate').rotate({animateTo:360});
+		   },
+		   mouseout : function() {
+			  $(this).find('img').rotate({animateTo:0});
+			  $(this).find('.rotate').rotate({animateTo:0});
+		   }
+		}
+	});
+
+	/*** Radio et checkBox Personnalis� ***/
+	$('.checkStyle').on('ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed', function(event){
+		}).iCheck({
+			checkboxClass: 'icheckbox',
+			radioClass: 'iradio',
+			increaseArea: '20%'
+	});
+
+	/** hide form if form Facure = Livraison **/
+    var checkIndentiqueRadio = $('input[name="identique"]:first');
+    if (checkIndentiqueRadio.attr('checked')) {
+    	$("#identiqueCoordn").hide();
+    }
+
+    $(".selectStyled").selectOrDie({
+		customClass: "selectPerso",
+        onChange: function() {
+            var currentFpays = $(this).val();
+        }
+	});
+
+	$(".sous_menu_cat ul li a").hover(function(){
+		var li_color=$(this).parent(".sous_menu_cat ul li").parent('ul').parent('.sous_menu_cat').parent('.pi-col-sm-6').find('.sub_cat_lib span').css('color');
+		$(this).css('color',li_color );
+	},function(){
+		$(this).css('color','#012640' );
+	});
+
+	$('.navItem').hover(function(){
+		if( $(window).width() > 1000 ){
+			var decalage = $(this).offset().left - $('.onglets').offset().left;
+			var subMenu = $(this).find('.subMenu');
+			var normalMargin = decalage-( subMenu.width()-$(this).width() )/2;
+			subMenu.css('display','block');
+			if( normalMargin < 0 ){
+				subMenu.css('margin-left', 0);
+			}
+			else if( normalMargin + subMenu.width() < $('.onglets').width() ){
+				subMenu.css('margin-left', normalMargin);
+			}
+			else{
+				subMenu.css('margin-left', $('.onglets').width() - subMenu.width());
+			}
+		}
+	}, function(){
+		$(this).find('.subMenu').css('display','none');
+	});
+
+	/************Bloc autopromo****************/
+	$(".bloc_product_home:nth-child(3) .top_products .articleBit").hover(function(){
+		$('.bloc_product_home:nth-child(3) ').css("z-index","999");
+	}, function(){
+		$('.bloc_product_home:nth-child(3) ').css("z-index","9");
+	});
+	/************ARTICLE HOVER****************/
+	$(".bloc_product_home:nth-child(1) .top_products .articleBit").hover(function(){
+		$('.bloc_product_home:nth-child(1) ').css("z-index","999");
+	}, function(){
+		$('.bloc_product_home:nth-child(1) ').css("z-index","9");
+	});
+	$(".bloc_product_home:nth-child(2) .top_products .articleBit").hover(function(){
+		$('.bloc_product_home:nth-child(2) ').css("z-index","999");
+	}, function(){
+		$('.bloc_product_home:nth-child(2) ').css("z-index","9");
+	});
+	$(".articleBit_lienpanier").each(function() {
+        if($(this).is(':visible')){
+
+			$(this).parent('.bg_art_w').parent('.articleBit').parent('.top_item ').parent('.slick-track').parent('.slick-list').parent('.top_products').parent('.bloc_product_home').css("z-index","999");
+		}
+		else{$(this).parent('.bg_art_w').parent('.articleBit').parent('.top_item ').parent('.slick-track').parent('.slick-list').parent('.top_products').parent('.bloc_product_home').css("z-index","9");}
+    });
+
+	/*******cloick vignette tab et mobile**********/
+	var i_width = $(window).width();
+	$(".articleBit").each(function() {
+		if(i_width < 1200){
+			$('.bloc_product_home').css("z-index","9");
+        	$(this).click(function(){
+				$(this).parent('.top_item ').parent('.slick-track').parent('.slick-list').parent('.top_products').parent('.bloc_product_home').css("z-index","999");
+    		});
+		}
+	});
+	/************CATEGORIE TABLO PANIER ******************/
+	$(".tablo_categ .up_qte").on("click",function(e){
+		e.preventDefault();
+		$oCurr = $(this);
+		$oInput = $oCurr.parents(".qte_panier:first").find("input.inputqte");
+		iValue = $oInput.val();
+		iValue ++ ;
+		$oInput.val(iValue);
+		$oInput.trigger("change");
+	});
+
+	$(".tablo_categ .down_qte").on("click",function(e){
+	  e.preventDefault();
+		$oCurr = $(this);
+		$oInput = $oCurr.parents(".qte_panier:first").find("input.inputqte");
+		iValue = $oInput.val();
+		  if(iValue > 1){
+			iValue -- ;
+			$oInput.val(iValue);
+			$oInput.trigger("change");
+		  }
+	});
+	/***********Article **************/
+	$( "body" ).on( "mouseenter", ".info_bull", function() {
+		$('.info_bull_content').fadeIn(0);
+	}).on( "mouseout", ".info_bull", function() {
+		$('.info_bull_content').fadeOut(0);
+	});
+	$('body').on('click', '#info_fraisdeport', function(){
+		$(this).next('.info_fraisdeport').fadeIn(0);
+	});
+	$('body').on('click', '.info_fraisdeport #close', function(){
+		$('.info_fraisdeport').fadeOut(0);
+	});
+	$( "body" ).on( "mouseenter", ".bull_client", function() {
+		$('.content_infobull').fadeIn(0);
+	}).on( "mouseout", ".bull_client", function() {
+		$('.content_infobull').fadeOut(0);
+	});
+	$( "body" ).on( "mouseenter", ".info_bull", function() {
+		$(this).next('.code_reponse').fadeIn(0);
+	}).on( "mouseout", ".info_bull", function() {
+		$(this).next('.code_reponse').fadeOut(0);
+	});
+	/** Scroll top Top **/
+	$(window).scroll(function () {
+        if ($(this).scrollTop() > 600) {
+            $('.goToTop').fadeIn();
+        } else {
+            $('.goToTop').fadeOut();
+        }
+    });
+
+	function popupCat(){
+		xOffset = 15;
+		yOffset = -40;
+
+		$("tr.show_popart").each(function(){
+			var id = $(this).attr("id");
+			//On survole la ligne tr.infobulle
+			$(this).hover(function(e){
+				$(this).removeClass("td_alt1");
+				$(this).addClass("arriereplan");
+
+				$("#topBit_"+id)
+				.css("display","block")
+				/*.css("top",(e.pageY - height_l) + "px")
+				.css("left",(e.pageX + yOffset) + "px")*/
+				.fadeIn("fast");
+			},
+			//On quitte la ligne tr.infobulle
+			function(){
+				$(this).removeClass("arriereplan");
+				$(this).addClass("td_alt1");
+				$("#topBit_"+id).css("display","none");
+			});
+			//On bouge la souris dans la ligne tr.infobulle
+			$(this).mousemove(function(e){
+				$("#topBit_"+id)
+				.css("display","block")
+				.css("margin-top",(e.pageY - $(this).offset().top - 10))
+				//.css("top",(e.pageY + yOffset - $(this).offset().top) + "px")
+				.css("left",(e.pageX + xOffset - $(this).offset().left) + "px");
+
+				//console.log(e.pageY - $(this).offset().top+"-");
+			});
+		});
+	};
+	//Lancement de la fonction popup
+	popupCat();
+
+    $('.goToTop').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
+	/************Panier etape BOX*****************/
+	var w_width = $(window).width();
+	if(w_width < 1023){
+	 $('.title_etape').click(function () {
+		 $('.title_etape').parent('.bx_etape').removeClass('active');
+         $(this).parent('.bx_etape').addClass('active');
+		 $('.content_etape').slideUp(400);
+		 if( $(this).next('.content_etape').is(":hidden")){
+		   $(this).next('.content_etape').slideDown(400);
+		   $(this).next('.content_etape').next(".adresse_livr_client").slideDown(400);
+		 }
+		 else{
+		  $(this).next('.content_etape').slideUp(400);
+		  $(this).next('.content_etape').next(".adresse_livr_client").slideUp(400);
+		   $(this).parent('.bx_etape').removeClass('active');}
+    });
+
+	}
+	/************Panier DEROULANT*****************/
+	$('.panier_bloc_hover').hover(function(){
+		$(this).find('.panier_deroulant').slideDown(0);
+	}, function(e){
+		$(this).find('.panier_deroulant').slideUp(0);
+	});
+	/************SS CATEG DEROULANT*****************/
+	$('.sscategBit').hover(function(){
+		$(this).find('.sous_sscategorie').slideDown(300);
+	}, function(e){
+		$(this).find('.sous_sscategorie').slideUp(300);
+	});
+
+
+	$('.img_infobull').hover(function(){
+		$(this).find('.infobull').slideDown(300);
+	}, function(e){
+		$(this).find('.infobull').slideUp(300);
+	});
+
+	$('#img_infobull_ajout').hover(function(){
+		$(this).find('#info_ajout').slideDown(300);
+	}, function(e){
+		$(this).find('#info_ajout').slideUp(300);
+	});
+
+	$('#code_name_txt').on('keyup', function(ed){
+        var $this = $(this);
+		var term = $this.val();
+		term = $.trim(term);
+		if(ed.which != 38 && ed.which != 40 && ed.which != 13){
+
+			$("#view_result").html("");
+			$("#express_suggesstion_box").hide();
+
+			if(term.length >= 3 ){
+				//$('#express_suggesstion_box').show();
+
+				$('#view_query').html(term);
+				var target = 'search_result_autocomplete.php';
+				clearTimeout(timeOutIdQuery);
+				timeOutIdQuery = setTimeout(function(){
+					var data = {
+						term: term,
+						type: 'articleSeek'
+					};
+					$.ajax({
+						type: 'POST',
+						url: target,
+						data: data,
+						dataType : 'json',
+						success: function(data){
+							if(data.length>0){
+
+								var htmlappend = '<div>';
+								for(var i = 0; i <data.length; i++ ){
+									var article = data[i];
+									htmlappend += '<div data-id="'+article.id+'" data-value="'+article.value+'" class="item_article">';
+									htmlappend += '<div class="img">';
+									htmlappend += '<img src="'+article.image+'" alt="'+article.value+'" />';
+									htmlappend += '</div>';
+									htmlappend += '<div class="info">';
+									htmlappend += '<div>Code article : '+article.code+'</div>';
+									htmlappend += '<div class="libelle">'+article.value+'</div>';
+									htmlappend += '<div class="titre2">'+article.titre2+'</div>';
+									htmlappend += '</div>';
+									htmlappend += '<div style="clear:both"></div>';
+									htmlappend += '</div>';
+									htmlappend += '<div class="separation"></div>';
+								}
+								htmlappend += '</div>';
+
+								$("#view_result").html(htmlappend);
+								$("#view_result .item_article").first().addClass("article_selected");
+
+								$('#view_result').on('mouseover','.item_article',function(){
+									var $thisArticle = $(this);
+									$("#view_result .item_article").removeClass("article_selected");
+									$thisArticle.addClass("article_selected");
+								});
+
+							}else{
+								//alert("Aucun resultat");
+								var htmlappend = '<div>';
+								htmlappend += '<div class="aucun_resultat">Aucun article trouv&eacute;</div>';
+								htmlappend += '</div>';
+								htmlappend += '<div class="separation"></div>';
+								$("#view_result").html(htmlappend);
+							}
+							$('#express_suggesstion_box').show();
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+						}
+					});
+				}, 500);
+			}
+		}
+    });
+
+	$('#express_suggesstion_box').on('click', '.item_article', function(ed){
+		var $this = $(this);
+		setArticleSuggetion($this);
+    });
+
+	$(document).keydown(function(ed) {
+		var articleSelected = $( "#view_result .item_article.article_selected" );
+		var indexArticleSelected = $( "#view_result .item_article" ).index( articleSelected );
+		var articles = $( "#view_result .item_article" );
+		var lengtharticles = articles.length;
+		if (lengtharticles > 0) {
+			switch(ed.which) {
+				case 38: // up
+					var indexPrecArticleSelected = indexArticleSelected-1;
+					if(indexArticleSelected == 0){
+						indexPrecArticleSelected = lengtharticles-1
+					}
+
+					articleSelected.removeClass("article_selected");
+					$( "#view_result .item_article" ).eq(indexPrecArticleSelected).addClass("article_selected");
+					ed.preventDefault();
+				break;
+
+				case 40: // down
+					var indexNextArticleSelected = 0;
+					if(lengtharticles-1>indexArticleSelected){
+						indexNextArticleSelected = indexArticleSelected+1;
+					}
+
+					articleSelected.removeClass("article_selected");
+					$( "#view_result .item_article" ).eq(indexNextArticleSelected).addClass("article_selected");
+					ed.preventDefault();
+				break;
+
+				case 13: // enter
+					if(articleSelected.length == 1){
+						setArticleSuggetion(articleSelected);
+						ed.preventDefault();
+					}
+				break;
+
+				default: return;
+			}
+		}
+
+	});
+
+	function setArticleSuggetion(element){
+		var $this = element;
+		$("#view_result").html("");
+		$("#express_suggesstion_box").hide();
+
+		var artid = $this.attr('data-id');
+		var value = $this.attr('data-value');
+
+		$('#code_name_txt').val(value);
+		$('#artidExpress').val(artid);
+	}
+
+	$(document).click(function() {
+		$("#view_result").html("");
+		$("#express_suggesstion_box").hide();
+    });
+
+	$("#express_suggesstion_box").on('click', function(e) {
+        e.stopPropagation();
+        return false;
+    });
+});
+
+function movecdeaction(){
+		var _width = $(window).width();
+		//var clonemenufooter = $(".menu_footer");
+		var cloneCaract = $(".cde_action");
+		if(_width < 640){
+			$('.cde_recap').after(cloneCaract);
+		}else{
+			$('.cde_recap').before(cloneCaract);
+		}
+}
+
+(function($){
+ $.fn.ScrollToInputEmpty = function(speed){
+  if(!speed) var speed = 'slow';
+
+  return this.each(function(){
+   $(this).click(function(){
+    var goscroll = false;
+    var the_hash = $(this).attr("href");
+    var regex = new RegExp("(.*)\#(.*)","gi");
+    var the_element = '';
+
+    if(the_hash.match("\#(.+)")) {
+
+     the_hash = the_hash.replace(regex,"$2");
+
+     if($("#"+the_hash).length>0) {
+      the_element = "#" + the_hash;
+      goscroll = true;
+     }
+     else if($("a[name=" + the_hash + "]").length>0) {
+      the_element = "a[name=" + the_hash + "]";
+      goscroll = true;
+     }
+
+     if(goscroll) {
+      var container = 'html';
+      if ($.browser.webkit) container = 'body';
+
+      $(container).animate({
+       scrollTop:$(the_element).offset().top
+      }, speed);
+      return false;
+     }
+    }
+   });
+  });
+ };
+})(jQuery);
+
+function custLog(x,base) {
+	return (Math.log(x))/(Math.log(base));
+}
+function createCookie(name,value,secondes) {
+    if (secondes) {
+        var date = new Date();
+        date.setTime(date.getTime()+(secondes));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function eraseCookie(name) {
+    createCookie(name,"",-1);
+}
+
+function savePositions(cookieName,sliderID,minimum,maximum){
+	var positions = sliderID.slider( "option", "values" );
+	var cookie = minimum+'|'+maximum+'|'+positions[0]+'|'+positions[1];
+	createCookie(cookieName,cookie,1000*60*60);
+}
+
+function getSliderPrix(minimum,maximum,prix,logarithmic,index){
+	if(logarithmic){
+		var minposValue = minimum;
+		var maxposValue = maximum;
+		var baselog = 10;
+		if(index == 0) var longueur = maxposValue;
+		else{ var longueur = maxposValue;}
+		var largeurlog = Math.log10(maxposValue) - Math.log10(minposValue) ;
+		return (((Math.log10(parseInt(prix)) -  Math.log10(minposValue))*(longueur))/(largeurlog));
+	}else{
+		return prix;
+	}
+}
+
+
+function calculerSlider(sliderID,logarithmic,divprix1,divprix2){
+	var positions = sliderID.slider( "option", "values" );
+	var minposValue = sliderID.slider("option","min");
+	var maxposValue = sliderID.slider("option","max");
+	if(logarithmic ) {
+		var minpospx = positions[0];
+		var maxpospx = positions[1];
+		var baselog = 10;
+		var longueur = maxposValue-minposValue;
+		var largeurlog = Math.log10(maxposValue) - Math.log10(minposValue) ;
+		var tmpprix1 = ((((minpospx-minposValue)) * largeurlog) / (longueur)) + Math.log10(minposValue) ;
+		var prix1 = Math.pow(baselog,tmpprix1);
+		var tmpprix2 = (((maxpospx-minposValue) * largeurlog) / (longueur)) + Math.log10(minposValue) ;
+		var prix2 = Math.pow(baselog,tmpprix2);
+		prix1 = Math.round(prix1);
+		prix2 = Math.round(prix2);
+	}else{
+		var prix1 = positions[0];
+		var prix2 = positions[1];
+	}
+	if(prix2<=minposValue) prix2 = minposValue+1;
+	if(prix1>=maxposValue) prix1 = maxposValue-1;
+	divprix1.val(prix1);
+	divprix2.val(prix2);
+}
+
+Math.log10 = function(n){ return this.log(n)/this.log(10); };
+
+var clique = 0;
+function cliqueslider(){
+    clique = 1;
+}
+function afficherpagebudget(){
+    clique = 0;
+    document.getElementById('btnok').click();
+}
+
+
+/** Pagination handler **/
+function Pagination() {
+    var form = null;
+    this.fieldParams = null;
+
+    this.init = function(fields, action) {
+        form = $('<form method="post" ' + (action?' action="' + action + '"':'') + '>');
+        this.fieldParams = fields;
+
+        var formField = null, realType = null, fieldValue = null, fieldType = null;
+        for (var i = 0; i < this.fieldParams.length; i++) {
+            param = this.fieldParams[i];
+            formField = $((param.parent ? param.parent + ' ' : '') + param.type + '[name=' + param.label + ']');
+            realType = formField.prop('type');
+            if (realType == 'checkbox' || realType == 'radio') {
+                fieldType = 'input[type=' + realType + ']';
+                fieldValue = (formField.prop('checked') ? formField.val() : '');
+            } else {
+                fieldValue = formField.val() || 0;
+            }
+            param.type = fieldType;
+            if (formField.length > 0) {
+                $(form).append($('<input type="hidden" name="' + param.label + '" value="' + fieldValue + '" >'));
+            }
+        }
+    };
+
+    this.handleChange = function(elt) {
+        var formField = null;
+        for (var i = 0; i < this.fieldParams.length; i++) {
+            param = this.fieldParams[i];
+            formField = $((param.parent ? param.parent + ' ' : '') + param.type + '[name=' + param.label + ']');
+            this.updateField(formField);
+        }
+        this.updateField(elt);
+        $(form).appendTo('body').submit();
+    };
+
+    this.updateField = function(elt) {
+        var formField = $(elt), fieldValue = null, realType = null;
+        if (formField.length > 0) {
+            realType = formField.prop('type');
+            if (realType == 'checkbox' || realType == 'radio') {
+                fieldValue = (formField.prop('checked') ? formField.val() : '');
+            } else {
+                fieldValue = formField.val();
+            }
+            $(form).find('input[name=' + formField.prop('name') + ']').val(fieldValue);
+        }
+    };
+
+    return this;
+}
+
+function toggleExpressOrder() {
+	$('[data-type=express-order]').first().slideToggle();
+}
+
+/** function overlay while animate flying cart image **/
+function overlayTransparent(){
+    var bodyElement = $(document.body),
+        overlayTransparentBloc = '<div class="overlay_transparent"></div>';
+    bodyElement.append(overlayTransparentBloc);
+    console.log("set overlay");
+}
+
+/*
+*@date 2016-11-11
+*image produit flying to cart */
+function addFlyImgCart(imgtodrag, bloc_cart){
+    overlayTransparent();
+    if (imgtodrag) {
+        var imgclone = imgtodrag.clone()
+            .offset({
+            top: imgtodrag.offset().top,
+            left: imgtodrag.offset().left
+        }).css({
+            'opacity': '0.5',
+            'position': 'absolute',
+            'height': imgtodrag.width(),
+            'width': imgtodrag.height(),
+            'z-index': '100'
+        }).appendTo($('body'))
+            .animate({
+            'top': bloc_cart.offset().top + 10,
+            'left': bloc_cart.offset().left + 10,
+            'width': 75,
+            'height': 75
+        }, 1000, 'easeInOutExpo', function(){
+            imgclone.animate({
+                 opacity: 0
+            },1000, function () {
+                $(this).detach()
+            });
+            $(document.body).find('div.overlay_transparent').remove();
+        });
+
+    }
+}
+
+function createAutoCompleteur(idInput,idCible,varName,urlJson,type) {
+	$(document).ready(function(){
+		$('#'+idInput).autocomplete({
+			source: urlJson, //urlJson : search_result_autocomplete.php?type=marque
+			select: function( e, ui ) {
+				switch(type) {
+					case 'simple':
+					case 'multiple':
+						var chaineToAdd = '<div id=\"'+varName+ui.item.id+'\"> - '+ui.item.value+' <input id=\"'+varName+'['+ui.item.id+']\" name=\"'+varName+'['+ui.item.id+']\" value=\"'+ui.item.id+'\" type=\"hidden\">';
+						chaineToAdd += ' <img src=\"images/templates/boutonsuppr.gif\" class=\"pointer\" onclick=\"$(\'#'+varName+ui.item.id+'\').html(\'\')\"></div>';
+						var idNotIn = varName+ui.item.id;
+						addAutoCompleteurValue(idCible,chaineToAdd,idNotIn,type);
+					break;
+					case 'simpleSetValue':
+						$('#'+idInput).val(ui.item.value);
+						if(idCible != '') {
+							$('#'+idCible).val(ui.item.id);
+						}
+					break;
+					default :
+						//on ne fait rien !!!!
+					break;
+				}
+			},
+			close: function(e, ui) {
+				switch(type) {
+					case 'simple':
+					case 'multiple':
+						$('#'+idInput).val('');
+					break;
+					case 'simpleSetValue':
+					default :
+						//on ne fait rien !!!!
+					break;
+				}
+
+			}
+		});
+	});
+}
+
+
+//dialog
+function dialog(title, content, width, height){
+	var html = "";
+	html += "<div id='d_overlay'>";
+	html += "	<div id='d_window' data-width='"+width+"' style='max-width:"+width+"px;width: calc(100% - 20px)'>";
+	html += "		<div id='d_btnclose'>";
+	html += "		</div>";
+	html += "		<div id='d_title'>";
+	html += "			<span>"+title+"</span>";
+	html += "		</div>";
+	html += "		<div id='d_sep'>";
+	html += "		</div>";
+	html += "		<div id='d_content'>";
+	html += "			<div>"+content+"</div>";
+	html += "		</div>";
+	html += "	</div>";
+	html += "</div>";
+
+	$('body').append(html);
+
+	$('body').on('click','#d_overlay, #d_btnclose, .btn_reset',function(event){
+		event.preventDefault();
+		closeDialog();
+	});
+
+	$('body').on('click','#d_window',function(event){
+		event.stopPropagation();
+	});
+
+	$( window ).resize(function() {
+		if($("#d_overlay").length > 0){
+			initDialog();
+		}
+	});
+
+	initDialog();
+	$("#d_overlay").hide();
+	$("#d_overlay").fadeIn(420);
+}
+
+function closeDialog(){
+	$("#d_overlay").fadeOut(420, function() {
+		$("#d_overlay").remove();
+	});
+}
+
+function initDialog(){
+	var ww = $(window).width();
+	var wh = $(window).height();
+	var defaultw = parseInt($("#d_window").attr("data-width")) + 20;
+	$('#d_overlay').width(ww);
+	$('#d_overlay').height(wh);
+	$("#d_window").css("margin-top", (wh-$("#d_window").height())/2 - 5);
+}
+
+//count nombre caractere telephone
+function initCount(selector, selectorPays, max){
+	handleCount(selector, selectorPays, max);
+	$('body').on('keyup',selector,function(event){
+		handleCount(selector, selectorPays, max);
+	});
+	$('body').on('change',selectorPays+', '+selector,function(event){
+		handleCount(selector, selectorPays, max);
+	});
+}
+
+function handleCount(selector, selectorPays, max){
+	$(selector+"_state").hide();
+	
+	if($(selectorPays).val() == "57"){
+		$(selector+"_state").show();
+		if (selector == "#Ftel2") {
+			var tmp_val = $.trim($(selector).val());
+			var tmp_val = tmp_val.split('');
+			var nb_tmp = tmp_val.length;
+			console.log(tmp_val + " || " + nb_tmp);
+			var num_tel = "";
+			for (var i = 0; i < tmp_val.length; i++) {
+				if ($.isNumeric(tmp_val[i])) {
+					var num_tel = num_tel + tmp_val[i];
+				}
+			}
+
+			if(num_tel.length > max){
+				$(selector).val(num_tel.substr(0, max));
+			}else{
+				$(selector).val(num_tel);
+			}
+			if($(selector+"_count").length > 0){
+				var nb = max - num_tel.length;
+				console.log(nb);
+				$(selector+"_count").text(nb);
+			}
+		}else{
+
+			if($(selector).val().length > max){
+				$(selector).val($(selector).val().substr(0, max));
+			}
+			if($(selector+"_count").length > 0){
+				var nb = max - $(selector).val().length;
+				console.log(nb);
+				$(selector+"_count").text(nb);
+			}
+		}
+	
+	}else{
+		$('#Ftel2').removeAttr('maxlength');
+		if (selector == "#Ftel2") {
+			var tmp_val = $.trim($(selector).val());
+			var tmp_val = tmp_val.split('');
+			var nb_tmp = tmp_val.length;
+			console.log(tmp_val + " || " + nb_tmp);
+			var num_tel = "";
+			for (var i = 0; i < tmp_val.length; i++) {
+				if ($.isNumeric(tmp_val[i])) {
+					var num_tel = num_tel + tmp_val[i];
+				}
+			}
+			$(selector).val(num_tel);
+		}
+	}
+}
+
+// function handleCount(selector, selectorPays, max){
+// 	$(selector+"_state").hide();
+// 	if($(selectorPays).val() == "57"){
+// 		$(selector+"_state").show();
+// 		if($(selector).val().length > max){
+// 			$(selector).val($(selector).val().substr(0, max));
+// 		}
+
+// 		if($(selector+"_count").length > 0){
+// 			var nb = max - $(selector).val().length;
+// 			console.log(nb);
+// 			$(selector+"_count").text(nb);
+// 		}
+// 	}
+// }

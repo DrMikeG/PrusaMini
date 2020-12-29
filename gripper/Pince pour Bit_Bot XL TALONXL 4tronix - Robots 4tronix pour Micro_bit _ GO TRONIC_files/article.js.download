@@ -1,0 +1,159 @@
+function afficherArticle(artid, action, param1) {
+	$(document).ready(function(){
+		var divCible =  $('#contenuArticle');
+		
+		var DATA = "";
+		
+		// artid
+		DATA += "artid="+artid;
+		// Action
+		DATA += "&action="+action;
+		// Caractéristiques
+		 $("select").each(function(){
+			var selectClass = $(this).attr("class");
+			var selectName = $(this).attr("id");
+			if (selectClass == 'articleCaracteristique') {
+				var identifiant = selectName.split("_");
+				var caractid = identifiant[1];
+				DATA += '&lstCaractArticle['+caractid+']='+$(this).val();
+			}
+		});
+		 // Personnalisation
+		 $("#formulairePersonnalisation input").each(function(){
+			var nomChamp = $(this).attr("id");
+			var typeInput = $(this).attr("type");
+			switch (typeInput) {
+				case 'radio':
+					$('input[name='+nomChamp+']:radio').each(function(){
+						if ($(this).attr('checked')) {
+							DATA += '&'+nomChamp+'='+$(this).val();
+						}
+					})
+				break;
+				case 'checkbox':
+					if ($(this).attr('checked')) {
+						DATA += '&'+nomChamp+'='+$(this).val();
+					}
+				break;
+				default:
+					DATA += '&'+nomChamp+'='+$(this).val();
+				break;				
+			}
+		});
+		$("#formulairePersonnalisation textarea").each(function(){
+			var nomChamp = $(this).attr("id");
+			DATA += '&'+nomChamp+'='+$(this).val();
+		});
+		$("#formulairePersonnalisation select").each(function(){
+			var nomChamp = $(this).attr("id");
+			DATA += '&'+nomChamp+'='+$(this).val();
+		});
+		/* spinnerHandler && spinnerHandler.show(); */
+		switch (action) {
+			case 'changerCaract':
+				if ($("#qtearticle")) {
+					var qte = parseFloat($("#qtearticle").val());
+				} else {
+					var qte = 1;
+				}
+				DATA += '&qteAajouter='+qte;
+			break;		
+			case 'addpanier':
+				if ($("#qtearticle")) {
+					var qte = parseFloat($("#qtearticle").val());
+				} else {
+					var qte = 1;
+				}
+				DATA += '&qte='+qte;
+
+			break;						
+			case 'changerQte':
+				// param1 : quantité
+				var qte = param1;	
+				DATA += '&qteAajouter='+qte;
+			break;	
+			case 'ajoute1':
+				var qte = parseFloat($("#qtearticle").val());
+				var qteAajouter = qte + 1;
+				DATA += '&qteAajouter='+qteAajouter;
+			break;
+			case 'enleve1':
+				var qte = parseFloat($("#qtearticle").val());
+				var qteAajouter = qte - 1;
+				DATA += '&qteAajouter='+qteAajouter;
+			break;
+		}
+		 //alert(DATA);
+		$.ajax({
+		   type: "POST",
+		   url: "article_ajax.php",
+		   data: DATA,
+		   beforeSend: function(data){
+                /**
+                *@date 2016-11-11 
+                * ajout au panier image produit survol au panier **/
+                if (action == 'addpanier'){
+                    var imgtodrag  = $("img#big");
+                    var bloc_cart = $("#contenuPanierCommunTop");
+                    console.log('begin check cart');
+                    addFlyImgCart(imgtodrag, bloc_cart);
+                }
+                /** ajout au panier image produit survol au panier **/
+    	   },
+		   success: function(data){
+			  /*	divCible.toggleClass('ajax-loader');*/
+			  	var tabreponse = data.split("|||");
+				divCible.html(tabreponse[0]);
+				tb_init('a.thickbox');
+				initPrety();
+				//arrierePlanAlterne();
+
+				if (action == 'addpanier'){
+				   $('#btn_add_to_cart').toggleClass('added_to_cart opacity_hover');		
+				   if ($('#contenuPanierCommunTop')){
+						var divCibleCommun =  $('#contenuPanierCommunTop');
+						divCibleCommun.html(tabreponse[1]);
+				   }		
+			    }
+                /* spinnerHandler && spinnerHandler.hide(); */
+		   }
+		});
+	});		
+}
+
+// Fonction pour ajouter un article au panier
+// Article sans caract
+
+
+function AjouterAuPanier(artid, qte)
+{
+	$(document).ready(function()
+	{
+		var DATA = "";
+		DATA += "artid="+artid;
+		DATA += "&action=addpanier";
+		DATA += "&qte="+qte;
+		
+		$.ajax({
+		   type: "POST",
+		   url: "article_ajax.php",
+		   data: DATA,
+		   beforeSend: function(data)
+		   {
+				spinnerHandler && spinnerHandler.show();
+    	   },
+		   success: function(data)
+		   {
+			  	var tabreponse = data.split("|||");
+
+				if ($('#contenuPanierCommunTop'))
+				{
+					var divCibleCommun =  $('#contenuPanierCommunTop');
+					divCibleCommun.html(tabreponse[1]);
+				}		
+				
+				spinnerHandler && spinnerHandler.hide();
+		   }
+		});
+	});		
+}

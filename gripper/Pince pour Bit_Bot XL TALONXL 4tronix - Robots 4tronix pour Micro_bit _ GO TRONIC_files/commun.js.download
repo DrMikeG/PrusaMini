@@ -1,0 +1,327 @@
+function controlerRulesPays() {
+	$(document).ready(function() {
+		// Pays de livraison = pays de facturation
+		$('#Lpays').val($('#Fpays').val());
+		$('#LpaysTemp').val($('#Fpays').val());
+        $('.selectStyled').selectOrDie('update');
+
+		if ($("#Fsiret").length) {
+			$("#Fsiret").rules('add', {required: false});
+			$("#Fsiret").valid();
+		}
+		if ($("#Ftva").length) {
+			$("#Ftva").rules('add', {required: false});
+			$("#Ftva").valid();
+		}
+	});
+}
+function test(mail){
+  $(document).ready(function() {
+    // var mailUser = $('#emailinscription').val();
+    function controlerEmail(mail) {
+        var DATA = form;
+
+        // Action
+        DATA += '&action=checkMailAjax';
+console.log(DATA);
+        $.ajax({
+           type: 'POST',
+           url: 'commun_ajax.php',
+           data: DATA,
+           success: function(data){
+            // console.log(data);
+           }
+        });
+    }
+    controlerEmail(mail);
+    });
+}
+function controlerChampsInscription(form) {
+	$(document).ready(function(){
+		var DATA = "";
+
+		// Action
+		DATA += "action=controlerChampsInscription";
+
+		// Statut facturation
+		$('input[name=Fpro]:radio').each(function(){
+			if ($(this).attr('checked')) {
+				var Fpro = $(this).val();
+				DATA += '&Fpro='+Fpro;
+			}
+		})
+
+		// Siret facturation
+		if ($("#Fsiret")) {
+			var Fsiret = $("#Fsiret").val();
+			DATA += "&Fsiret="+Fsiret;
+		}
+
+		// TVA intracommunautaire facturation
+		if ($("#Ftva")) {
+			var Ftva = $("#Ftva").val();
+			DATA += "&Ftva="+Ftva;
+		}
+
+		// Pays facturation
+		var Fpaysid = $("#Fpays").val();
+		DATA += "&Fpaysid="+Fpaysid;
+
+		$.ajax({
+		   type: "POST",
+		   url: "commun_ajax.php",
+		   data: DATA,
+		   success: function(data){
+				switch (data) {
+					case '0':
+                        console.log("submit form");
+						form.submit();
+					break;
+					case '1':
+						// Siret obligatoire
+						$("#Fsiret").rules('add', {required: true});
+						$("#Fsiret").valid();
+					break;
+					case '2':
+						// TVA obligatoire
+						$("#Ftva").rules('add', {required: true});
+						$("#Ftva").valid();
+					break;
+					case '3':
+						// Siret et TVA obligatoires
+						$("#Fsiret").rules('add', {required: true});
+						$("#Fsiret").valid();
+						$("#Ftva").rules('add', {required: true});
+						$("#Ftva").valid();
+					break;
+				}
+		   }
+		});
+	});
+}
+function controlerEmail(form) {
+	$(document).ready(function(){
+		var DATA = form;
+
+		// Action
+		DATA += "action=checkMailAjax";
+
+		$.ajax({
+		   type: "POST",
+		   url: "commun_ajax.php",
+		   data: DATA,
+		   success: function(data){
+				console.log(data);
+		   }
+		});
+	});
+}
+
+function passerCommandeExpress() {
+	$(document).ready(function(){
+		var divCible =  $('#retourCommandeExpress');
+		var DATA = "";
+
+
+
+		// Action
+		DATA += "action=passerCommandeExpress";
+
+		// Code article
+		if ($("#express_code")) {
+			var express_code = $("#express_code").val();
+			DATA += "&express_code="+express_code;
+		}
+
+		// Qté
+		if ($("#express_qte")) {
+			var express_qte = $("#express_qte").val();
+			DATA += "&express_qte="+express_qte;
+		}
+
+		$.ajax({
+		   type: "POST",
+		   url: "commun_ajax.php",
+		   data: DATA,
+		   beforeSend: function(data){
+			  	divCible.html('');
+		   },
+		   success: function(data){
+			   contenu = data.split("|||");
+			   divCible.html(contenu[1]);
+			   if (contenu[0] == "OK"){
+				   $("#formCommandeExpress").submit();
+			   }
+		   }
+		});
+	});
+}
+
+function copierCoordonneesFacturation() {
+	$(document).ready(function(){
+		// Civilité
+		$('input[name=Fcivilite]:radio').each(function(){
+			if ($(this).attr('checked')) {
+				var Fcivilite = $(this).val();
+				$('input[name=Lcivilite]:radio').each(function(){
+					if ($(this).val() == Fcivilite){
+						$(this).attr('checked', 'checked');
+					} else {
+						$(this).attr('checked', '');
+					}
+				})
+			}
+		})
+		// Nom
+		$('#Lnom').val($('#Fnom').val());
+		// Prénom
+		$('#Lprenom').val($('#Fprenom').val());
+		// Société
+		if ($('#Lste')) {
+			$('#Lste').val($('#Fste').val());
+		}
+		// Adresse
+		$('#Ladresse').val($('#Fadresse').val());
+		// Adresse 2
+		if ($('#Lcomp')) {
+			$('#Lcomp').val($('#Fcomp').val());
+		}
+		// Code postal
+		$('#Lcp').val($('#Fcp').val());
+		// Ville
+		$('#Lville').val($('#Fville').val());
+		// Pays
+		$('#Lpays').val($('#Fpays').val());
+		$('#LpaysTemp').val($('#Fpays').val());
+		// Téléphone
+		$('#Ltel1').val($('#Ftel1').val());
+	});
+    //hide on Formulaire Civilite to TelFixe
+    $("#identiqueCoordn").slideUp( "slow" );
+}
+
+function viderCoordonneesLivraison() {
+	$(document).ready(function(){
+		// Civilité
+		$('input[name=Lcivilite]:radio').each(function(){
+			if ($(this).val() == "0") {
+				$(this).attr('checked', 'checked');
+			} else {
+				$(this).attr('checked', '');
+			}
+		})
+		// Nom
+		$('#Lnom').val('');
+		// Prénom
+		$('#Lprenom').val('');
+		// Société
+		if ($('#Lste')) {
+			$('#Lste').val('');
+		}
+		// Adresse
+		$('#Ladresse').val('');
+		// Adresse 2
+		if ($('#Lcomp')) {
+			$('#Lcomp').val('');
+		}
+		// Code postal
+		$('#Lcp').val('');
+		// Ville
+		$('#Lville').val('');
+		// Pays
+		if ($('#Fpays')) {
+			$('#Lpays').val($('#Fpays').val());
+			$('#LpaysTemp').val($('#Fpays').val());
+		} else {
+			$('#Lpays').val('57');
+			$('#LpaysTemp').val('57');
+		}
+		// Téléphone
+		$('#Ltel1').val('');
+	});
+    $("#identiqueCoordn").slideDown( "slow" );
+}
+
+function cocherDecocherAjoutPanier() {
+	$(document).ready(function() {
+		$('input[name=popupAjoutPanier]:checkbox').each(function(){
+			if ($(this).attr('checked')) {
+				$.cookie("popupPanier", "non");
+			} else {
+				$.cookie("popupPanier", null);
+			}
+		})
+	});
+}
+
+function afficherArticlesVus() {
+	$(document).ready(function(){
+		var divCible =  $('#topcommun');
+
+		var DATA = "";
+
+		// Action
+		DATA += "action=afficherArticlesVus";
+
+		$.ajax({
+		   type: "POST",
+		   url: "commun_ajax.php",
+		   data: DATA,
+		   beforeSend: function(data){
+			  	//divCible.html('');
+				//divCible.toggleClass('ajax-loader');
+		   },
+		   success: function(data){
+			  	divCible.html(data);
+		   }
+		});
+	});
+}
+
+function rechercheSuggestions(recherche, langue) {
+	$(document).ready(function(){
+		var DATA = "";
+
+		// Action
+		DATA += "action=rechercheSuggestions&recherche="+recherche+"&lgrech="+langue;
+
+		$.ajax({
+		   type: "POST",
+		   url: "commun_ajax.php",
+		   data: DATA,
+		   success: function(data){
+			   contenu = data.split("|||");
+			   // $('#antidotSuggestions').html(contenu[0]);
+			   $('#antidotQ').html(contenu[1]);
+		   }
+		});
+	});
+}
+
+function rechercheSuggestions2(recherche, langue) {
+	$(document).ready(function(){
+		var DATA = "";
+
+		// Action
+		DATA += "action=rechercheSuggestions2&recherche="+recherche+"&lgrech="+langue;
+
+		$.ajax({
+		   type: "POST",
+		   url: "commun_ajax.php",
+		   data: DATA,
+		   success: function(data){
+			   $('#antidotQ').html(data);
+		   }
+		});
+	});
+}
+
+// $(document).ready(function(){
+	// $("#searchForm").submit(function(){
+		// var qm = $(".antidotLeft").find(".AFSSuggestItem").text();
+		// if(qm != ""){
+			// $('#qm').val(""+qm+"");
+			// $('#searchForm').submit();
+		// }
+	// });
+// });

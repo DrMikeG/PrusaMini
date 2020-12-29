@@ -1,0 +1,844 @@
+// JavaScript Document
+
+function litnombre(aChaineNombre)
+{
+	// retire les espaces les points et autres caractères différents des nombres
+	var li=0;
+	var lChaine=""+aChaineNombre;
+	while (li<eval(lChaine.length))
+	{
+		if (lChaine.charCodeAt(li)<48 || lChaine.charCodeAt(li)>57)
+		{
+			lChaine=lChaine.substring(0,li)+lChaine.substring(li+1,lChaine.length);
+			li--;
+		}
+		li++;
+	}
+	return lChaine;
+}
+
+
+function litnombreCompte(aChaineNombre)
+{
+	var li=0;
+	var lNb;
+	var lChaine=""+aChaineNombre;
+
+	while (li<eval(lChaine.length))
+	{
+		if (lChaine.charCodeAt(li)<48 || lChaine.charCodeAt(li)>57)
+		{
+			if (lChaine.charCodeAt(li)>=65 || lChaine.charCodeAt(li)<=90)
+			{
+				lNb=lChaine.charCodeAt(li)-64;
+				if (lNb>9)
+				{
+					lNb=lNb-9;
+				}
+
+				if (lNb>9)
+				{
+					lNb=lNb-8;
+				}
+
+				lChar=""+lNb;
+				lChaine=lChaine.substring(0,li)+lChar+lChaine.substring(li+1,lChaine.length);
+			}
+			else
+			{
+				if (lChaine.charCodeAt(li)>=97 || lChaine.charCodeAt(li)<=122)
+				{
+					lNb=lChaine.charCodeAt(li)-96;
+					if (lNb>9)
+					{
+						lNb=lNb-9;
+					}
+
+					if (lNb>9)
+					{
+						lNb=lNb-8;
+					}
+	
+					lChar=""+lNb;
+					lChaine=lChaine.substring(0,li)+lChar+lChaine.substring(li+1,lChaine.length);
+				}
+				else
+				{	
+					// on retire le caractère indésirable
+					lChaine=lChaine.substring(0,li)+lChaine.substring(li+1,lChaine.length);
+					li--;
+				}
+			}
+		}
+
+		li++;
+	}
+	return lChaine;
+}
+
+function litnombreIBAN(aChaineNombre)
+{
+	// retire les espaces les points et autres caractères différents des nombres
+	// pour les lettres A à Z, remplacement par un nombre :
+	// A remplacé par 10 ... Z remplacé par 35
+	var li=0;
+	var lNb;
+	var lChaine=""+aChaineNombre;
+	var lChaineRes="";
+
+	while (li<eval(lChaine.length))
+	{
+		if (lChaine.charCodeAt(li)<48 || lChaine.charCodeAt(li)>57)
+		{
+			if (lChaine.charCodeAt(li)>=65 || lChaine.charCodeAt(li)<=90)
+			{
+				lNb=lChaine.charCodeAt(li)-55;
+
+				lChar=""+lNb;
+				lChaineRes=lChaineRes+lChar;
+			}
+			else
+			{
+				if (lChaine.charCodeAt(li)>=97 || lChaine.charCodeAt(li)<=122)
+				{
+					lNb=lChaine.charCodeAt(li)-87;
+					lChar=""+lNb;
+					lChaineRes=lChaineRes+lChar;
+				}
+				else
+				{	
+					// on retire le caractère indésirable
+				}
+			}
+		}
+		else
+		{
+			lChaineRes=lChaineRes+lChaine.substring(li,li+1);
+		}
+		li++;
+	}
+	return lChaineRes;
+}
+
+function fCalcRib(aCodeBanque, aCodeGuichet, aNoCompte)
+{
+	var lCodeBanque, lCodeGuichet, lNoCompte;
+	var lint ;
+	var lCompteNum;
+	var lCompteStr;
+	var lA,	lB, lC, lD, lE, lF, lG, lH, lI, lLength, lLoop,	lAsc, lNb;
+
+	// retire les espaces les points et autres caractères différents des nombres
+	lCodeBanque=litnombre(aCodeBanque);
+	lCodeGuichet=litnombre(aCodeGuichet);
+	lNoCompte=litnombreCompte(aNoCompte);
+
+	if (lCodeBanque.length!=5)
+	{
+		return 0;
+	}
+
+	if (lCodeGuichet.length!=5)
+	{
+		return 0;
+	}
+
+	if (lNoCompte.length>11)
+	{
+		return 0;
+	}
+
+	lA=parseFloat(lCodeBanque);
+	lB=parseFloat(lCodeGuichet);
+	lC=parseFloat(lNoCompte);
+
+	lD=8*lA;
+
+	lA=lD % 97;
+
+	lE=15*lB;
+	lB=97-(lE % 97);
+	lF=3*lC;
+	lC=97-(lF % 97);
+	lG=lA+lB+lC;
+	lI=lG % 97;
+
+	if (lI==0)
+	{
+		return 97;
+	}
+	else
+	{
+		return lI;
+	}
+}
+
+function fCalcIBAN(acodepays, aRIB)
+{
+
+	var lcodepays, lRIB, lConcat, lNb, lIBAN, lCodeNum, lCodeStr, li, lRetenue, lCle, lNbInterm, lStrInterm;
+
+	lRIB=litnombreIBAN(aRIB);
+	lcodepays=litnombreIBAN(acodepays);
+
+	if ((acodepays.length!=2) || (lcodepays.length!=4))
+	{
+		return "";
+	}
+
+	lConcat=lRIB+lcodepays+"00";
+	
+	// découpage par bloc de 9 chiffres pour calculer le modulo (pb de précision)
+	li=0;
+	lRetenue="";
+	while (li<eval(lConcat.length))
+	{
+		lStrInterm=lRetenue+lConcat.substring(li, li+9);
+		lNbInterm=parseFloat(lStrInterm);
+		lCle=lStrInterm % 97;
+		lRetenue=""+lCle;
+		
+		li=li+9;
+	}
+
+	lCodeNum=98-(lCle % 97);
+
+	if (lCodeNum<10)
+	{
+		lCodeStr="0"+lCodeNum;
+	}
+	else
+	{
+		lCodeStr=""+lCodeNum;
+	}
+	
+	lIBAN=acodepays+lCodeStr+aRIB;
+
+
+	return lIBAN;
+
+}
+
+function fCopierRib(aCodeBanque, aCodeGuichet, aNoCompte, aCleRib)
+{
+	var lCodeBanque, lCodeGuichet, lNoCompte, lCleRib, lCodeStr, lRib, lNbCleRib;
+
+	lCodeBanque=litnombre(aCodeBanque);
+	lCodeGuichet=litnombre(aCodeGuichet);
+	lNoCompte=aNoCompte;
+	lCleRib=litnombre(aCleRib);
+
+
+	if (lCodeBanque.length!=5)
+	{
+		return 0;
+	}
+
+	if (lCodeGuichet.length!=5)
+	{
+		return 0;
+	}
+
+	if (lNoCompte.length!=11)
+	{
+		return 0;
+	}
+	
+        if ((lCleRib.length>2)||(lCleRib.length==0))
+	{
+		return 0;
+	}
+
+	lNbCleRib=parseFloat(lCleRib) % 100;
+
+        if ((lNbCleRib<1) || (lNbCleRib>97))
+	{
+		return 0;
+	}
+
+	if (lCleRib<10)
+	{
+		lCodeStr="0"+lNbCleRib;
+	}
+	else
+	{
+		lCodeStr=""+lNbCleRib;
+	}
+
+	lRib=lCodeBanque+lCodeGuichet+lNoCompte+lCodeStr;
+
+	return lRib;
+}
+
+function cliqueaffiliation()
+	{
+	document.rib.clerib.value=fCalcRib(document.rib.codebanque.value, document.rib.codeguichet.value, document.rib.nocompte.value) ;
+	document.rib.submit() ;
+	}
+
+function arrondir(nombre, decimales) // affiliation
+	{
+	  if (isNaN(nombre)) return "";
+	  if (decimales == 0) 
+		{
+		 var n = Math.round(nombre);
+		 return n.toString();
+	  }
+  else if (decimales > 0) 
+	{
+	 if (document.all) 
+		var undefined; // Netscape 4 ne connaît pas la constante undefined
+	 var p10 = Math.pow(10, decimales);
+	 var n = Math.round(nombre * p10);
+	 n = n.toString();
+	 var point = n.length - decimales;
+	 if (point >= 0) 
+		n = n.substring(0, point) + "." + n.substring(point);
+	 else 
+		n = "0." + formater(n, decimales);
+	  }
+  else 
+	{
+	 var p10 = Math.pow(10, -decimales);
+	 var n = Math.round(nombre / p10) * p10;
+	 n = n.toString();
+	  }
+  if (nombre.signe_decimal == undefined) 
+	return n;
+  else 
+	return n.replace(".", nombre.signe_decimal);
+	}	
+
+
+
+
+function recommander(article)
+	{
+	window.open ('recommander.php?artid='+article+'', 'Recommander', 'Width=600, Height=450, toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no') ;
+	}
+
+function imprimer(article)
+	{
+	window.open ('imprimer.php?artid='+article+'', 'Impression', 'Width=800, Height=600, toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=yes, status=no') ;
+	}
+
+
+
+function agrandir(article, largeur, hauteur)
+	{
+	/*var newlargeur = largeur * 4 ;
+	var newhauteur = hauteur * 2 ;*/
+	var newlargeur = 750 ;
+	var newhauteur = 700 ;
+	window.open ('photos.php?artid='+article+'', 'Photos', 'Width='+newlargeur+', Height='+newhauteur+', toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no') ;
+	}
+
+function agrandirannonce(annonce, photoid)
+	{
+	var newlargeur = 700 ;
+	var newhauteur = 650 ;
+	window.open ('photos.php?annonce='+annonce+'&photosup='+photoid, 'Photos', 'Width='+newlargeur+', Height='+newhauteur+', toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no') ;
+	}
+
+
+
+
+function ferme(menu)  {
+	var element = document.getElementById(menu);
+	if(element) {
+		element.style.display = 'none';
+	}
+}
+
+function ouvre(afermer, menu)  {
+	 if (afermer != ''){
+		ferme(afermer) ;
+	}
+	 document.getElementById(menu).style.display='block';
+ }
+
+
+function voir(article)  {
+	var element = document.getElementById(article);
+	if(element) {
+		element.style.display = 'block';
+	}
+}
+
+function cacher(article)  {
+	var element = document.getElementById(article);
+	if(element) {
+		element.style.display = 'none';
+	}
+}
+
+
+
+function MM_preloadImages() 
+		{
+		var d=document ;
+		if (d.images)
+			{
+			if (!d.MM_p)
+				d.MM_p=new Array();
+			var i, j = d.MM_p.length, a = MM_preloadImages.arguments ;
+			for (i = 0 ; i < a.length ; i++)
+			if (a[i].indexOf("#") != 0)
+				{
+				d.MM_p[j] = new Image ; 
+				d.MM_p[j++].src = a[i] ;
+				}
+			}	
+		}
+
+function changeImgAnnonce(srcImg,imagesize0,imagesize1)
+	{
+	var largeur_en_cours = imagesize0 ;
+	var hauteur_en_cours = imagesize1 ;
+	if (imagesize0 > 500 || imagesize1 > 500)
+		{
+		if (largeur_en_cours > 500) // si largeur > 112
+			{
+			var width = 500 ; // largeur = 112
+			var height = Math.floor (500 * hauteur_en_cours / largeur_en_cours) ; // hauteur = 112 * (768/1024)
+			largeur_en_cours = width ;
+			hauteur_en_cours = height ;
+			} 
+		if (hauteur_en_cours > 500) 
+			{
+			var width = Math.floor(largeur_en_cours * 500 / hauteur_en_cours) ;
+			var height = 500 ;
+			largeur_en_cours = width ;
+			hauteur_en_cours = height ;
+			}
+		} 
+	document.getElementById('diapo').innerHTML = '<img src='+srcImg+' width='+largeur_en_cours+' height='+hauteur_en_cours+' name=big>';
+	}	
+
+function zoomimage(srcImg){
+	document.getElementById('detailsarticle').style.display="none";
+	document.getElementById('zoomarticle').style.display="block";
+	document.getElementById('imagezoom').src="pho-"+srcImg;
+	//alert("aa");
+}
+function affichedetails(){
+	document.getElementById('detailsarticle').style.display="block";
+	document.getElementById('zoomarticle').style.display="none";
+}
+function changeImgAnnonceTemp(srcImg)
+	{
+	document.getElementById('big').src = srcImg ;
+	//document.getElementById('big').onmouseover = "sd"; 
+	}
+function changeImgAnnonceQzoom(srcImg,srcImg2){
+	document.getElementById('big').src = srcImg ;
+	document.getElementById('verybig').href = srcImg2; 
+	//$(function() {
+	//	$(".jqzoom").jqzoom();
+	//});
+}
+
+
+
+function changeImgAnnonce2(srcImg)
+	{
+	document.getElementById('big').src = srcImg ;
+	}	
+
+function toggle(id,p)
+	{
+	var myChild = document.getElementById(id);
+	if(myChild.style.display!='block')
+		{
+		myChild.style.display='block';
+		document.getElementById(p).className='folderOpen';
+		}
+	else
+		{
+		myChild.style.display='none';
+		document.getElementById(p).className='folder';
+		}
+	}
+function vider(objet)
+	{
+	if (objet.value == "recherche" || objet.value == "Adresse mail" || objet.value == "passe" || objet.value == "Votre e-mail" || objet.value == "Mot de passe")
+		{
+		objet.value = "" ;
+		}
+	}
+
+function clignotement()
+	{
+    if (document.getElementById("MonElement").style.display=="block")
+       document.getElementById("MonElement").style.display="none";
+    else
+       document.getElementById("MonElement").style.display="block";
+	}
+
+
+function affiche(id) {
+	var d = document.getElementById(id);
+	if (d) {
+		d.style.display='block';
+	}
+	SelectVisible("hidden",document.getElementsByTagName('select'));
+}
+	
+function cache(id) {
+	var d = document.getElementById(id);
+	if (d) {
+		d.style.display='none';
+	}
+	SelectVisible("visible",document.getElementsByTagName('select'));
+}
+
+function SelectVisible(v,elem) 
+	{
+	if (navigator.appName=="Microsoft Internet Explorer" && typeof document.body.style.maxHeight == "undefined")
+		{
+		for (var i=0;i<elem.length;i++) 
+			elem[i].style.visibility=v;
+		}
+	}
+
+
+function poplink(id)
+	{
+	 document.getElementById(id).style.display = 'block';
+	}
+
+function killlink(id)
+	{
+	 document.getElementById(id).style.display = 'none';
+	}
+
+function explication()
+	{
+	window.open ('explication.php', 'Paiement', 'Width='+'350'+', Height='+'150'+', toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no') ;
+	}
+
+function reserver(article)
+	{
+	window.open ('reserver.php?artid='+article, 'Réserver', 'Width='+'540'+', Height='+'500'+', toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no') ;
+	}
+
+function orange(id)
+	{
+//    alert('couleur de fond : '+document.getElementById(id).style.background) ;
+    document.getElementById(id).style.background = "#F9DEC6" ;
+	}
+
+function blanc(id)
+	{
+    document.getElementById(id).style.background = "#FFFFFF" ;
+	}
+
+function afficheobject(nom_piece)
+	{
+	document.write('<object id="objMP" width="353" height="291" ');
+	document.write('classid="CLSID:22D6f312-B0F6-11D0-94AB-0080C74C7E95" ');
+	document.write('codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6.4.7.1112"');
+	document.write('standby="Chargement en cours" type="application/x-oleobject">');
+	document.write('<param name="Filename" value="http://www.leclerc-pierry.com/configurations/www.leclerc-pierry.com/images/player/pieces_jointes/'+nom_piece+'" />');
+	document.write('<param name="AnimationAtStart" value="false" />');
+	document.write('<param name="AutoSize" value="false" />');
+	document.write('<param name="AutoStart" value="true" />');
+	document.write('<param name="Balance" value="0" />');
+	document.write('<param name="CanSeekToMarkers" value="true" />   ');
+	document.write('<param name="EnableContextMenu" value="false" />');
+	document.write('<param name="EnableTracker" value="true" />   ');
+	document.write('<param name="Loop" value="false" />');
+
+	document.write('<param name="ShowAudioControls" value="true" />');
+	document.write('<param name="ShowControls" value="true" />');
+	document.write('<param name="ShowDisplay" value="false" />');
+	document.write('<param name="ShowGotoBar" value="false" />');
+	document.write('<param name="ShowPositionControls" value="false" />');
+	document.write('<param name="ShowStatusBar" value="true" />');
+	document.write('<param name="ShowTracker" value="true" />');
+	document.write('<param name="TransparentAtStart" value="true" />');
+	document.write('<param name="Volume" value="-500" />');
+	document.write('<param name="wmode" value="transparent">');
+	document.write('<param name="quality" value="high">');
+	document.write('<param name="bgcolor" value="#FFFFFF">');
+	document.write('<embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" ');
+	document.write('src="http://www.leclerc-pierry.com/configurations/www.leclerc-pierry.com/images/player/pieces_jointes/'+nom_piece+'" id="objMP" width="353" height="291" ');
+	document.write('animationatstart="false" autosize="false"');
+	document.write('autostart="false" balance="false" canseektomarkers="true" enablecontextmenu="false" enabletracker="true" loop="false"'); 
+	document.write('showaudiocontrols="true" showcontrols="true" showdisplay="false" showgotobar="false" showpositioncontrols="false" ');
+	document.write('showstatusBar="true"');
+	document.write('showtracker="true" transparentatstart="true" volume="-500" quality="high" wmode="transparent" bgcolor="#FFFFFF"></embed>');
+	document.write('</object>');
+	}
+
+function SetCookieM(c_name,value,expiredays) {
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate()+expiredays);
+	document.cookie=c_name+ "=" +escape(value)+ ( (expiredays==null) ? "" : ";expires="+exdate);
+}
+
+function cookie_cgv(nom, expires) {
+	var valeur="";
+	if (document.forms['formcde1'].elements['cgv'].checked==false){
+		valeur="non";
+	}else{
+		valeur="oui";
+	}
+	
+  document.cookie=nom+"="+escape(valeur)+
+  ((expires==null) ? "" : ("; expires="+expires.toGMTString()));
+}
+
+function GetCookie(c_name) {
+	if (document.cookie.length>0){
+		c_start=document.cookie.indexOf(c_name + "=");
+		if (c_start!=-1) { 
+			c_start=c_start + c_name.length+1 ;
+			c_end=document.cookie.indexOf(";",c_start);
+			if (c_end==-1) {
+				c_end=document.cookie.length;
+			}
+			return unescape(document.cookie.substring(c_start,c_end))
+		} 
+	}
+	return null
+} 
+
+
+var TSpider = new Array("googlebot", "architextspider", "scooter", "infoseek", "ultraseek", "lycos_spider", "gulliver", "fast-webcrawler", "slurp");
+function Spiders() {
+	var Retour, i, Signature;
+	Signature = navigator.userAgent.toLowerCase();
+	for(i=0;(i<TSpider.length && !Retour);i++)
+		Retour = (Signature.indexOf(TSpider[i]) > 0);
+	return(Retour);
+}
+function CookieOn()
+{
+	SetCookieM("TestCookie", 123, 1);
+	return (GetCookie("TestCookie")==123);
+}
+
+
+function entrer()
+	{
+	Rang = 1;
+	SetCookieM("majorite", Rang, 1);
+	Rang = GetCookie("majorite");
+	var prov = document.formu.prov.value ;
+	var id = document.formu.id.value ;
+	var lib = document.formu.lib.value ;
+	location.href = prov+','+id+','+lib+'.htm' ;
+	}
+	
+function sortir()
+	{
+	location.href = 'index.htm' ;
+	}
+
+function reserver(article)
+	{
+	window.open ('reserver.php?artid='+article, 'Réserver', 'Width='+'540'+', Height='+'400'+', toolbar=no, directories=no, location=no, menubar=no, resizable=no, scrollbars=no, status=no') ;
+	}
+
+
+
+function copie_coordonnees() {
+	document.forminscription.Lcivilite[0].checked = false ;
+	document.forminscription.Lcivilite[1].checked = false ;
+	document.forminscription.Lcivilite[2].checked = false ;
+	if (document.forminscription.Fcivilite[0].checked)
+		document.forminscription.Lcivilite[0].checked = true ;
+	if (document.forminscription.Fcivilite[1].checked)
+		document.forminscription.Lcivilite[1].checked = true ;
+	if (document.forminscription.Fcivilite[2].checked)
+		document.forminscription.Lcivilite[2].checked = true ;
+	document.forminscription.Lnom.value = document.forminscription.Fnom.value ;
+	document.forminscription.Lprenom.value = document.forminscription.Fprenom.value ;
+	document.forminscription.Lste.value = document.forminscription.Fste.value ;
+	if (document.forminscription.Ladresse)
+		document.forminscription.Ladresse.value = document.forminscription.Fadresse.value ;
+	if (document.forminscription.Lnumerovoie)
+		document.forminscription.Lnumerovoie.value = document.forminscription.Fnumerovoie.value ;
+	if (document.forminscription.Ltypevoie)
+		document.forminscription.Ltypevoie.selectedIndex = document.forminscription.Ftypevoie.selectedIndex ;
+	if (document.forminscription.Lvoie)
+		document.forminscription.Lvoie.value = document.forminscription.Fvoie.value ;	
+	if (document.forminscription.Llieudit)
+		document.forminscription.Llieudit.value = document.forminscription.Flieudit.value ;				
+	document.forminscription.Lcomp.value = document.forminscription.Fcomp.value ;
+	document.forminscription.Lcp.value = document.forminscription.Fcp.value ;
+	document.forminscription.Lville.value = document.forminscription.Fville.value ;
+	document.forminscription.Ltel1.value = document.forminscription.Ftel1.value ;
+	document.forminscription.Lpays.selectedIndex = document.forminscription.Fpays.selectedIndex ;	
+	}
+
+function vide_coordonnees() {
+	document.forminscription.Lcivilite[1].checked = false ;
+	document.forminscription.Lcivilite[2].checked = false ;
+	document.forminscription.Lcivilite[0].checked = true ;
+	document.forminscription.Lnom.value = '' ;
+	document.forminscription.Lprenom.value = '' ;
+	document.forminscription.Lste.value = '' ;
+	if (document.forminscription.Ladresse)
+		document.forminscription.Ladresse.value = '' ;
+	if (document.forminscription.Lnumerovoie)
+		document.forminscription.Lnumerovoie.value = '' ;
+	if (document.forminscription.Ltypevoie)
+		document.forminscription.Ltypevoie.selectedIndex = '' ;
+	if (document.forminscription.Lvoie)
+		document.forminscription.Lvoie.value = '' ;
+	if (document.forminscription.Llieudit)
+		document.forminscription.Llieudit.value = '' ;		
+	document.forminscription.Lcomp.value = '' ;
+	document.forminscription.Lcp.value = '' ;
+	document.forminscription.Lville.value = '' ;
+	document.forminscription.Ltel1.value = '' ;
+	document.forminscription.Lpays.selectedIndex = 57 ;
+	}
+
+// FONCTION DE DEFILEMENT DU TEXTE POUR LE REFERENCEMENT
+var defile;
+var psinit = 50 ;
+var pscrnt = psinit ;
+
+function texteDefile() { 
+	if (!defile) 
+		defile = document.getElementById('txt_defile2') ; 
+	if (defile) { 
+		if (pscrnt < ( - defile.offsetWidth) ) 
+			pscrnt = psinit; 
+		else 
+			pscrnt+= -1;
+		defile.style.left = pscrnt+"px"; 
+	} 
+} 
+setInterval("texteDefile()",10);
+
+function arrondir(nombre, decimales) // affiliation
+	{
+	  if (isNaN(nombre)) return "";
+	  if (decimales == 0) 
+		{
+		 var n = Math.round(nombre);
+		 return n.toString();
+	  }
+  else if (decimales > 0) 
+	{
+	 if (document.all) 
+		var undefined; // Netscape 4 ne connaît pas la constante undefined
+	 var p10 = Math.pow(10, decimales);
+	 var n = Math.round(nombre * p10);
+	 n = n.toString();
+	 var point = n.length - decimales;
+	 if (point >= 0) 
+		n = n.substring(0, point) + "." + n.substring(point);
+	 else 
+		n = "0." + formater(n, decimales);
+	  }
+  else 
+	{
+	 var p10 = Math.pow(10, -decimales);
+	 var n = Math.round(nombre / p10) * p10;
+	 n = n.toString();
+	  }
+  if (nombre.signe_decimal == undefined) 
+	return n;
+  else 
+	return n.replace(".", nombre.signe_decimal);
+	}	
+	
+function ajoute1()
+	{
+	var qte = parseFloat(document.getElementById('qte').value) ;
+	if (qte < 999)
+		{
+		qte = qte + 1 ;
+		document.getElementById('qte').value = qte ;
+		var prix=document.getElementById('prix').value;
+		var prixpromo=document.getElementById('prixpromo').value;
+		if(prixpromo!="")
+			{
+				prixpromo=arrondir(prixpromo*qte,2);
+				prix=arrondir(prix*qte,2);
+				document.getElementById('afficheprix').innerHTML=' €<s>'+prixo+'</s><b>'+prixpromo+' €</b>';
+			}
+		else{
+				prix=arrondir(prix*qte,2);
+				document.getElementById('afficheprix').innerHTML='<b>'+prix+' €</b>';
+			}
+		}
+	}
+
+function enleve1()
+	{
+	var qte = parseFloat(document.getElementById('qte').value) ;
+	if (qte > 1)
+		{
+		qte = qte - 1 ;
+		document.getElementById('qte').value = qte ; 
+		
+		var prix=document.getElementById('prix').value;
+		var prixpromo=document.getElementById('prixpromo').value;
+		if(prixpromo!="")
+			{
+				prixpromo=arrondir(prixpromo*qte,2);
+				prix=arrondir(prix*qte,2);
+				document.getElementById('afficheprix').innerHTML=' €<s>'+prixo+'</s><b>'+prixpromo+' €</b>';
+			}
+		else{
+				prix=arrondir(prix*qte,2);
+				document.getElementById('afficheprix').innerHTML='<b>'+prix+' €</b>';
+			}
+		}
+	}
+
+function terminercommande()
+	{
+	document.formu.action='cde1.php';
+	document.getElementById('act').value='addpanierperso';
+	document.formu.submit();
+	}	
+
+/***** FONCTIONS POUR LES MISES EN SCENES *******/
+function apercuscene(event, id){
+	bloc = document.getElementById("apercu_" + id);
+	var x = event.clientX + 3;
+	var y = event.clientY + 3;
+
+	bloc.style.display = "block";
+	bloc.style.top = y + "px";
+	bloc.style.left = x + "px";
+}
+						
+function fermerscene(id){
+	bloc = document.getElementById("apercu_" + id);
+	bloc.style.display = "none";
+}
+
+/*****FIN FONCTIONS*******/
+
+
+function recoverPassword(isPanier) {
+    if(isPanier){  
+        $('#mdp_lost_panier').slideToggle();     
+    }else{
+        document.getElementById('divFormInscription').style.display = 'none';
+        document.getElementById('divFormPassword').style.display = 'block';
+    }
+}
+
+function afficherReponse(id){
+	$("div").each(function(){
+		var divClass = $(this).attr("class");
+		var divName = $(this).attr("id");
+		if (divClass == 'element') {
+			$(this).css("display", "none");
+			if (divName == id) {
+				//$(this).css("display", "block");
+				$(this).show(200);
+			}
+		}
+	});
+	
+}

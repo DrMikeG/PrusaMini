@@ -1,0 +1,8 @@
+var afsAcp;var acpCustomId;function loadAcp(a){var b=document.getElementById(a.fieldId);if((typeof a.customId=="undefined")&&(typeof a.templateId=="undefined")){afsAcp=new a.acpClass(b,a.acpUrl,a.serviceId);}else if(typeof a.templateId=="undefined"){afsAcp=new a.acpClass(b,a.acpUrl,document.getElementById(a.customId),a.serviceId);acpCustomId=a.customId;}else{afsAcp=new a.acpClass(b,document.getElementById(a.templateId),a.acpUrl,a.serviceId);acpCustomId=a.customId;}
+if(typeof a.acpFeeds!="undefined"){setAcpFeeds(a.lang,a.acpFeeds);}
+acpConfig(afsAcp);}
+function acpConfig(a){}
+function setAcpFeeds(d,a){afsAcp.getFeeds().clear();if(typeof a!="undefined"&&a.length>0){var c=a.split(",");for(var b in c){if(c[b].length>0){addAcpFeed(c[b],d);}}}else{if(d.length>0){addAcpFeed(d);}}}
+function setAcpFeed(b,a){afsAcp.getFeeds().clear();addAcpFeed(b,a);}
+function addAcpFeed(c,b){var a;if(b=="undefined"||b.length==0){a=c;}else{a=c+"_"+b;}
+afsAcp.getFeeds().add(a);}
