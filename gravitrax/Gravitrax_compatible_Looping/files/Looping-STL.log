@@ -1,0 +1,25 @@
+STL translation to Solid Edge
+Date: Thursday,January 21,2021 06:35PM
+Source File:C:\Users\gibbens\Documents\PrusaMini\gravitrax\Gravitrax_compatible_Looping\files\Looping.stl
+Author: Unknown
+Organization: Unknown
+Source System: DEX
+
+Hardware:
+Processor: Intel(R) Core(TM) i7-8850H CPU @ 2.60GHz
+Operating System: Windows 10 Enterprise Edition
+Installed Memory: 31.8 GB
+
+Software Information:
+Parasolid Version: 33.0.171
+PSBodyshop Version: 33.0.86
+Solid Edge Version: 222.00.00.023 x64
+
+STL Import Options
+Heal Mesh Faults:Off
+Make Base Feature:On
+Enable Logging:On
+
+Translation progress:
+Translation process completed
+Time required to translate:00 : 00 : 01
