@@ -1,0 +1,1 @@
+Strap Buckle (No Supports) by mistertech on Thingiverse: https://www.thingiverse.com/thing:2814683
