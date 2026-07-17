@@ -1,0 +1,42 @@
+STEP translation to Solid Edge
+Date: Friday,March 06,2026 11:35AM
+Source File: C:\Users\gibbens\Documents\PrusaMini\2026\03_macro_dji\Osmo_Nano_Dummy__STEP.stp
+Author: Bart
+Organization: Unknown organisation
+Source System: HOOPS Exchange
+
+Hardware:
+Processor: 12th Gen Intel(R) Core(TM) i9-12950HX
+Operating System: Windows 11 Enterprise Edition Version:23H2 Build:22631 System Type:64-bit
+Installed Memory: 63.69 GB
+
+Software Information
+Parasolid Version: 38.0.185
+PSBodyShop Version: 38.0.116
+Step Adapter Version: 1700.0.0
+Solid Edge Version: 227.00.00.032 x64
+
+Step Import Options
+Import Faceted Bodies: On
+Import Check Bodies: Off
+Import Curves: On
+Import DoNotSave: On
+Import Multiple Bodies As Single Part File: On
+Import Optimize:Off
+Import Stitch Surfaces: On
+Import Boolean Solids: On
+Make Base Feature: On
+Simplify Geometry: On
+Import Imprint Curves: On
+Import Drive: C:
+Import Stitch Surfaces: On
+Import Surfaces: On
+Import Output Path: C:\Users\gibbens\Documents\PrusaMini\2026\03_macro_dji
+Import Enable Default Output Path: On
+Import PMI: Off
+Import As Internal Components: Off
+Import Path: 
+
+Translating to Parasolid data types...
+Translation process completed
+Total time required to translate and post process:00 : 00 : 06

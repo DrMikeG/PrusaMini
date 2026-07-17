@@ -1,0 +1,18 @@
+SELFTEST START
+printer serial: CZPX2220X017XC09752
+
+Fan0 Started
+Fan1 Started
+Fan0 at 20% PWM = 435 RPM
+Fan1 at 20% PWM = 3186 RPM
+Fan0 at 40% PWM = 2401 RPM
+Fan1 at 40% PWM = 5383 RPM
+Fan0 at 60% PWM = 3831 RPM
+Fan1 at 60% PWM = 6629 RPM
+Fan0 at 80% PWM = 4676 RPM
+Fan1 at 80% PWM = 7568 RPM
+Fan0 at 100% PWM = 5266 RPM
+Fan1 at 100% PWM = 8437 RPM
+Fan0 Passed
+Fan1 Passed
+SELFTEST END

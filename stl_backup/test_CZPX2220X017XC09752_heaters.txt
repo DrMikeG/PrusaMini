@@ -1,0 +1,8 @@
+SELFTEST START
+printer serial: CZPX2220X017XC09752
+
+Nozzle Started
+Bed Started
+Nozzle Passed
+Bed Passed
+SELFTEST END

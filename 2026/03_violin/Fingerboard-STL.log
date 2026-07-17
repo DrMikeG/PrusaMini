@@ -1,0 +1,26 @@
+STL translation to Solid Edge
+Date: Monday,March 09,2026 08:11PM
+Source File:C:\Users\gibbens\Documents\PrusaMini\2026\03_violin\Fingerboard.stl
+Author: Unknown
+Organization: Unknown
+Source System: DEX
+
+Hardware:
+Processor: 12th Gen Intel(R) Core(TM) i9-12950HX
+Operating System: Windows 10 Enterprise Edition
+Installed Memory: 63.69 GB
+
+Software Information:
+Parasolid Version: 38.0.185
+PSBodyshop Version: 38.0.116
+STL Adapter Version: 1700.0.0
+Solid Edge Version: 227.00.00.032 x64
+
+STL Import Options
+Heal Mesh Faults:Off
+Make Base Feature:On
+Enable Logging:On
+
+Translation progress:
+Translation process completed
+Time required to translate:00 : 00 : 00
